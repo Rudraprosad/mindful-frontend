@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,10 +25,14 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
+        // Store user in localStorage as fallback for cross-site cookie issues
+        localStorage.setItem('user', JSON.stringify(data.user));
+        if (data.token) localStorage.setItem('token', data.token);
+
         if (data.user && data.user.condition) {
-          window.location.href = `/modules/${data.user.condition.toLowerCase()}`;
+          navigate(`/modules/${data.user.condition.toLowerCase()}`, { replace: true });
         } else {
-          window.location.href = '/phase';
+          navigate('/phase', { replace: true });
         }
       } else {
         setError(data.message || 'Invalid credentials');

@@ -13,6 +13,9 @@ export default function Navbar({ user }) {
         method: 'POST',
         credentials: 'include'
       });
+      // Clear localStorage fallback too
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
       // Reload to clear auth state
       window.location.reload();
     } catch (err) {

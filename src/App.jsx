@@ -36,6 +36,8 @@ function App() {
         if (response.ok) {
           const data = await response.json();
           setUser(data.user);
+          // Keep localStorage in sync
+          localStorage.setItem('user', JSON.stringify(data.user));
           
           // Smart routing for persistent state
           const authPaths = ['/login', '/signup'];
@@ -43,22 +45,47 @@ function App() {
           const isHomePage = location.pathname === '/';
           
           if (data.user.condition) {
-            // If they have a condition and try to visit home or login/signup, redirect to dashboard
             if (isAuthPage || isHomePage) {
               navigate(`/modules/${data.user.condition.toLowerCase()}`, { replace: true });
             }
           } else {
-            // If they don't have a condition but try to visit login/signup, redirect to phase selection
             if (isAuthPage) {
               navigate('/phase', { replace: true });
             }
           }
         } else {
-          setUser(null);
+          // Cookie verify failed — try localStorage fallback
+          const storedUser = localStorage.getItem('user');
+          if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+            setUser(parsedUser);
+
+            const authPaths = ['/login', '/signup'];
+            const isAuthPage = authPaths.includes(location.pathname);
+            const isHomePage = location.pathname === '/';
+
+            if (parsedUser.condition) {
+              if (isAuthPage || isHomePage) {
+                navigate(`/modules/${parsedUser.condition.toLowerCase()}`, { replace: true });
+              }
+            } else {
+              if (isAuthPage) {
+                navigate('/phase', { replace: true });
+              }
+            }
+          } else {
+            setUser(null);
+          }
         }
       } catch (err) {
         console.error("Auto-login failed:", err);
-        setUser(null);
+        // Try localStorage fallback on network error too
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        } else {
+          setUser(null);
+        }
       } finally {
         setLoadingAuth(false);
       }
