@@ -30,7 +30,7 @@ function App() {
     // Check if user has a valid cookie token for auto-login
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/users/verify', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/users/verify`, {
           credentials: 'include'
         });
         if (response.ok) {

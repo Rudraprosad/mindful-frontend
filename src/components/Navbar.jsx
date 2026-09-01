@@ -9,7 +9,7 @@ export default function Navbar({ user }) {
   
   const handleLogout = async () => {
     try {
-      await fetch('http://localhost:8000/api/users/logout', {
+      await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/users/logout`, {
         method: 'POST',
         credentials: 'include'
       });

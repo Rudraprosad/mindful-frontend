@@ -13,7 +13,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8000/api/users/login', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/users/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         // To set cookies from a different port, we need credentials: 'include'

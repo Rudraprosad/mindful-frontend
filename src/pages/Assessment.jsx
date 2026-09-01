@@ -76,7 +76,7 @@ export default function Assessment() {
     }`;
 
     try {
-      const response = await fetch('http://localhost:8000/test', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/test`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: prompt, scores, phase, userId: "60d5ecb8b392d733c8b12345" })
@@ -89,7 +89,7 @@ export default function Assessment() {
 
       // Save condition to backend
       try {
-        await fetch('http://localhost:8000/api/users/update-condition', {
+        await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/users/update-condition`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',

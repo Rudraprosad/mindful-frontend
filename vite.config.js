@@ -8,5 +8,4 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base: process.env.VITE_BASE_PATH || '/https://github.com/Rudraprosad/mindful-frontend'
 })
